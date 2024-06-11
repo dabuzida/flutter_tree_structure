@@ -1,15 +1,11 @@
+// class MyListTreeView extends StatefulWidget {
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:list_treeview/list_treeview.dart';
 
-class MyListTreeView extends StatefulWidget {
-  const MyListTreeView({super.key});
-
-  @override
-  State<MyListTreeView> createState() => _MyListTreeViewState();
-}
-
+/// The data class that is bound to the child node
+/// You must inherit from NodeData ！！！
+/// You can customize any of your properties
 class TreeNodeData extends NodeData {
   TreeNodeData({this.label, this.color}) : super();
 
@@ -24,11 +20,20 @@ class TreeNodeData extends NodeData {
   ///...
 }
 
-class _MyListTreeViewState extends State<MyListTreeView> with SingleTickerProviderStateMixin {
+class MyListTreeView2 extends StatefulWidget {
+  const MyListTreeView2({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _MyListTreeView2State();
+  }
+}
+
+class _MyListTreeView2State extends State<MyListTreeView2> with SingleTickerProviderStateMixin {
   final TreeViewController _treeViewController = TreeViewController();
   bool _isSuccess = false;
   final List<Color> _colors = [];
-
   @override
   void initState() {
     super.initState();
@@ -41,122 +46,9 @@ class _MyListTreeViewState extends State<MyListTreeView> with SingleTickerProvid
     _getData();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-        width: 700,
-        // height: 500,
-        child: _buildUIContent(),
-      ),
-    );
-  }
-
-  Widget _buildUIContent() {
-    if (_isSuccess) {
-      return getBody();
-    }
-
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
-  Widget getBody() {
-    return ListTreeView(
-      shrinkWrap: false,
-      // padding: EdgeInsets.all(0),
-      itemBuilder: (BuildContext context, NodeData data) {
-        TreeNodeData item = data as TreeNodeData;
-//              double width = MediaQuery.of(context).size.width;
-        double offsetX = item.level * 16.0;
-        return Container(
-          height: 54,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Colors.grey))),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: offsetX),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(right: 5),
-                        child: InkWell(
-                          splashColor: Colors.amberAccent.withOpacity(1),
-                          highlightColor: Colors.red,
-                          onTap: () {
-                            selectAllChild(item);
-                          },
-                          child:
-                              // Checkbox(
-                              //   value: data.isSelected,
-                              //   onChanged: (value) {
-                              //     if (value == null) {
-                              //       return;
-                              //     }
-
-                              //     data.isSelected = value;
-                              //     setState(() {});
-                              //   },
-                              // ),
-                              data.isSelected
-                                  ? const Checkbox(
-                                      value: true,
-                                      onChanged: null,
-                                    )
-                                  : const Checkbox(
-                                      value: false,
-                                      onChanged: null,
-                                    ),
-                        ),
-                      ),
-                      Text(
-                        'level-${item.level}-${item.indexInParent}',
-                        style: TextStyle(fontSize: 15, color: getColor(item.level)),
-                      ),
-                      // SizedBox(
-                      //   width: 10,
-                      // ),
-//                          Text(
-//                            '${item.label}',
-//                            style: TextStyle(color: item.color),
-//                          ),
-                    ],
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: item.isExpand,
-                child: InkWell(
-                  onTap: () {
-                    add(item);
-                  },
-                  child: const Icon(Icons.add, size: 30),
-                ),
-              )
-            ],
-          ),
-        );
-      },
-      onTap: (NodeData data) {
-        print('index = ${data.index}');
-      },
-      // onLongPress: (data) {
-      //   delete(data);
-      // },
-      controller: _treeViewController,
-    );
-  }
-
   void _getData() async {
     _isSuccess = false;
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
     var colors1 = TreeNodeData(label: 'Colors1');
     var color11 = TreeNodeData(label: 'rgb(0,139,69)', color: const Color.fromARGB(255, 0, 139, 69));
@@ -192,12 +84,12 @@ class _MyListTreeViewState extends State<MyListTreeView> with SingleTickerProvid
   }
 
   Color randomColor() {
-    return Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
-
     // int r = Random.secure().nextInt(200);
     // int g = Random.secure().nextInt(200);
     // int b = Random.secure().nextInt(200);
     // return Color.fromARGB(255, r, g, b);
+
+    return Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
   }
 
   /// Add
@@ -212,20 +104,123 @@ class _MyListTreeViewState extends State<MyListTreeView> with SingleTickerProvid
     var newNode = TreeNodeData(label: 'rgb($r,$g,$b)', color: Color.fromARGB(255, r, g, b));
 
     _treeViewController.insertAtFront(dataNode, newNode);
-    _treeViewController.insertAtRear(dataNode, newNode);
-    _treeViewController.insertAtIndex(1, dataNode, newNode);
+//    _controller.insertAtRear(dataNode, newNode);
+//    _controller.insertAtIndex(1, dataNode, newNode);
   }
 
   void delete(dynamic item) {
-    _treeViewController!.removeItem(item);
+    _treeViewController.removeItem(item);
   }
 
   void select(dynamic item) {
-    _treeViewController!.selectItem(item);
+    _treeViewController.selectItem(item);
   }
 
   void selectAllChild(dynamic item) {
-    _treeViewController!.selectAllChild(item);
+    _treeViewController.selectAllChild(item);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isSuccess) {
+      return getBody();
+    }
+
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget getBody() {
+    return ListTreeView(
+      controller: _treeViewController,
+      shrinkWrap: false,
+      padding: const EdgeInsets.all(0),
+      onTap: (NodeData data) {
+        print('index = ${data.index}');
+      },
+      // onLongPress: (data) {
+      //   delete(data);
+      // },
+      itemBuilder: (BuildContext context, NodeData data) {
+        TreeNodeData item = data as TreeNodeData;
+//              double width = MediaQuery.of(context).size.width;
+        double offsetX = item.level * 16.0;
+
+        // print(item.isExpand);
+        print(item.label);
+
+        return Container(
+          height: 54,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Colors.grey))),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: offsetX),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: InkWell(
+                          splashColor: Colors.amberAccent.withOpacity(1),
+                          highlightColor: Colors.red,
+                          onTap: () {
+                            selectAllChild(item);
+                          },
+                          child:
+                              // data.isSelected
+                              //     ? Icon(
+                              //         Icons.star,
+                              //         size: 30,
+                              //         color: Color(0xFFFF7F50),
+                              //       )
+                              //     : Icon(
+                              //         Icons.star_border,
+                              //         size: 30,
+                              //         color: Color(0xFFFFDAB9),
+                              //       ),
+                              data.isSelected
+                                  ? const Checkbox(
+                                      value: true,
+                                      onChanged: null,
+                                    )
+                                  : const Checkbox(
+                                      value: false,
+                                      onChanged: null,
+                                    ),
+                        ),
+                      ),
+                      Text(
+                        'level-${item.level}-${item.indexInParent}',
+                        style: TextStyle(fontSize: 15, color: getColor(item.level)),
+                      ),
+                      // Text(
+                      //   '${item.label}',
+                      //   style: TextStyle(color: item.color),
+                      // ),
+                    ],
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: item.isExpand,
+                child: InkWell(
+                  onTap: () {
+                    add(item);
+                  },
+                  child: const Icon(Icons.add, size: 30),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   final List<String> _data = <String>[

@@ -80,10 +80,10 @@ class _MyTreeState extends State<MyTree> {
         print('onExpand');
         print(node);
       },
-      onRemove: (node, parent) {
-        print('onRemove');
-        print(node);
-      },
+      // onRemove: (node, parent) {
+      //   print('onRemove');
+      //   print(node);
+      // },
       onTap: (node) {
         print('onTap');
         print(node);
