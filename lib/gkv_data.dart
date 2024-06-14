@@ -1,4 +1,56 @@
 class GKVData {
+  static List<String> groupChildList({required String prefix}) {
+    switch (prefix) {
+      case 'empty':
+        return <String>[
+          'alzwin',
+          'bogunso',
+          'default',
+          'sentents',
+        ];
+      case 'alzwin':
+        return <String>[
+          'play',
+        ];
+      case 'bogunso':
+        return <String>[
+          'manager',
+        ];
+      case 'sentents':
+        return <String>[
+          'manager',
+        ];
+      default:
+        return <String>[];
+    }
+  }
+
+  static const List<String> groupList3 = <String>[
+    'a/b',
+    'a/c',
+    'a/d',
+  ];
+  static const List<String> groupList2 = <String>[
+    'animal/dog/poodle',
+    'animal/dog/bulldog',
+    'animal/dog/eagle',
+    'animal/bird/parrot',
+    'animal/bird/owl',
+    'animal/bird/chicken',
+    'animal/insect/ant',
+    'animal/insect/bee',
+    'animal/insect/butterfly',
+    'brand/it/naver',
+    'brand/it/google',
+    'brand/it/meta',
+    'brand/car/toyota',
+    'brand/car/kia',
+    'brand/car/jaguar',
+    'brand/monitor/lg',
+    'brand/monitor/samsung',
+    'brand/monitor/asus',
+    'brand/monitor/dell',
+  ];
   static const List<String> groupList = <String>[
     'alzwin',
     'alzwin.play.app.beta.base.info',
